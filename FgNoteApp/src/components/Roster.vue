@@ -3,7 +3,7 @@
     import { ref } from "vue";
 
     //TODO: Make dynamic
-    const characterList= ["Alisa", "Anna", "Asuka", "Azucena", "Bryan", "Claudio", "Clive", "Devil-Jin", "Dragunov", "Eddy", "Feng", "Heihachi", "Hwoarang", "Jack-8", "Jin", "Jun", "Kazuya", "King", "Kuma", "Lars", "Law", "Lee", "Leo", "Leroy", "Lidia", "Lili", "Nina", "Panda", "Paul", "Raven", "Reina", "Shaheen", "Steve", "Victor", "Xiayou", "Yoshimitsu", "Zafina"];
+    const characterList= ["Alisa", "Anna", "Asuka", "Azucena", "Bryan", "Claudio", "Clive", "Devil-Jin", "Dragunov", "Eddy", "Feng", "Heihachi", "Hwoarang", "Jack-8", "Jin", "Jun", "Kazuya", "King", "Kuma", "Lars", "Law", "Lee", "Leo", "Leroy", "Lidia", "Lili", "Nina", "Panda", "Paul", "Raven", "Reina", "Shaheen", "Steve", "Victor", "Xiaoyu", "Yoshimitsu", "Zafina"];
     const characterAmount: number = 37;
     const rowSize: number = 12;
     const columnSize: number = 2;

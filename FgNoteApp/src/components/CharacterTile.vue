@@ -1,5 +1,6 @@
 <script setup lang="ts">
     import { computed, ref, watch } from 'vue';
+    import { bus } from "../bus.ts";
 
     interface Props {
         character: string
@@ -20,10 +21,14 @@
     function onImgError() {
         imgFound.value = false;
     }
+
+    function emitBus() {
+        bus.emit('characterSelected', props.character);
+    }
 </script>
 
 <template>
-    <div class="w-15 h-20 border-3 rounded-md border-red-500 hover:border-yellow-400 cursor-pointer custom-background">
+    <div @click="emitBus" class="w-15 h-20 border-3 rounded-md border-red-500 hover:border-yellow-400 cursor-pointer custom-background">
         <img v-if="imgFound" :src="characterIcon" @error="onImgError()" class="w-full">
     </div>
 </template>
