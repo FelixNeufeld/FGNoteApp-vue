@@ -1,5 +1,7 @@
 <script setup lang="ts">
-    import { ref } from 'vue'
+    import { onUnmounted, ref } from 'vue'
+    import MoveInput from './MoveInput.vue'
+    import { bus } from "../bus.ts";
 
     interface Move{
         id: number,
@@ -21,6 +23,7 @@
     const editHeaderInput = ref('');
     const headerEditWarningActive = ref(false);
     const headerEditWarning = ref('Warning not set');
+    const moveInputActive = ref(false);
 
     sectionMovesMap.value.set("First Section", []);
 
@@ -51,7 +54,6 @@
     }
 
     function checkForEditWarning(): void {
-        
         if(editHeaderInput.value === '') {
             headerEditWarning.value = "You have to name the section you want to edit";
             headerEditWarningActive.value = true;
@@ -68,13 +70,13 @@
         headerEditWarningActive.value = false;
     }
 
-    function enterEditMode(header: string) {
+    function enterEditMode(header: string): void {
         editingHeader.value = header;
         editHeaderInput.value = header;
         editMode.value = true;
     }
 
-    function confirmEdit(oldHeader: string) {
+    function confirmEdit(oldHeader: string): void {
         const index = sectionHeaders.value.findIndex(header => header === oldHeader);
 
         if(index !== -1 && !headerEditWarningActive) {
@@ -83,11 +85,12 @@
         }
     }
 
-    function cancelEdit() {
+    function cancelEdit(): void {
         editMode.value = false;
+        editingHeader.value = "";
     }
 
-    function addMove(header: string) {
+    function addMove(header: string): void {
         const testMove: Move = {
             id: 1,
             inputs: "1",
@@ -99,9 +102,24 @@
         }
         sectionMovesMap.value.get(header)?.push(testMove);
     }
+
+    function activateMoveInput(): void {
+        moveInputActive.value = true;
+    }
+
+    bus.on('moveInputCancelled', () => {
+        moveInputActive.value = false;
+    })
+
+    onUnmounted(() => {
+        bus.off('moveInputCancelled')
+    })
 </script>
 
 <template>
+    <div v-if="moveInputActive" class="min-w-full min-h-full w-full h-full z-50 fixed inset-0">
+        <MoveInput></MoveInput>
+    </div>
     <div>
         <!-- Sections -->
         <div v-for="header in sectionHeaders">
@@ -126,9 +144,9 @@
             <hr class="text-red-500">
             <!-- Moves -->
             <div v-for="moves in sectionMovesMap.get(header)" class="mb-1">
-                <p>Test</p>
+
             </div>
-            <div @click="addMove(header)" class="w-fit bg-red-500 p-1 rounded-md border-2 border-transparent cursor-pointer hover:bg-transparent hover:border-yellow-500 hover:text-yellow-500">Add Move/Combo</div>
+            <div @click="activateMoveInput()" class="w-fit bg-red-500 p-1 rounded-md border-2 border-transparent cursor-pointer hover:bg-transparent hover:border-yellow-500 hover:text-yellow-500">Add Move/Combo</div>
 
         </div>
 
