@@ -1,20 +1,13 @@
 <script setup lang="ts">
-    import { onUnmounted, ref } from 'vue'
+    import { onUnmounted, ref, type Ref } from 'vue'
     import MoveInput from './MoveInput.vue'
     import { bus } from "../bus.ts";
+    import Move from './Move.vue';
+    import type { Move as MoveModel } from '../model/Move';
 
-    interface Move{
-        id: number,
-        inputs: string,
-        frame: number,
-        frameBlock: number,
-        frameCounter: number,
-        frameHit: number,
-        properties: string[],
-    }
 
     const sectionHeaders = ref(["First Section"]);
-    const sectionMovesMap = ref<Map<string, Move[]>>(new Map());
+    //const sectionMovesMap = ref<Map<string, Move[]>>(new Map());
     const headerInput = ref('');
     const headerInputWarningActive = ref(false);
     const headerInputWarning = ref('Warning not set');
@@ -25,7 +18,16 @@
     const headerEditWarning = ref('Warning not set');
     const moveInputActive = ref(false);
 
-    sectionMovesMap.value.set("First Section", []);
+    const exampleMove: MoveModel = {
+        id: 1,
+        inputs: "1",
+        height: "High",
+        frame: 10,
+        frameBlock: +1,
+        frameCounter: +8,
+        frameHit: +8,
+        properties: ["heat", "floorbreak"]
+    };
 
     function addHeader(): void {
         if (headerInputWarningActive.value) {
@@ -90,19 +92,6 @@
         editingHeader.value = "";
     }
 
-    function addMove(header: string): void {
-        const testMove: Move = {
-            id: 1,
-            inputs: "1",
-            frame: +10,
-            frameBlock: +1,
-            frameCounter: +8,
-            frameHit: +8,
-            properties: [],
-        }
-        sectionMovesMap.value.get(header)?.push(testMove);
-    }
-
     function activateMoveInput(): void {
         moveInputActive.value = true;
     }
@@ -122,9 +111,9 @@
     </div>
     <div>
         <!-- Sections -->
-        <div v-for="header in sectionHeaders">
+        <div v-for="header in sectionHeaders" class="mb-5">
             <!-- Header -->
-            <div class="flex flex-row">
+            <div class="flex flex-row items-center mb-1">
                 <h1 v-if="!editMode || header !== editingHeader" class="text-red-500 mb-0.5 mr-2">{{ header }}</h1>
                 <input v-if="editMode && header === editingHeader" v-model="editHeaderInput" @input="checkForEditWarning()" type="text" class="custom-background border-2 border-red-500 rounded-md mr-1 mb-1 p-1 text-red-500 outline-0 focus:border-yellow-500 focus:text-yellow-500">
 
@@ -141,13 +130,11 @@
 
                 <p v-if="headerEditWarningActive && header === editingHeader" class="text-red-500">{{ headerEditWarning }}</p>
             </div>
-            <hr class="text-red-500">
+            <hr class="text-red-500 mb-5">
             <!-- Moves -->
-            <div v-for="moves in sectionMovesMap.get(header)" class="mb-1">
-
-            </div>
-            <div @click="activateMoveInput()" class="w-fit bg-red-500 p-1 rounded-md border-2 border-transparent cursor-pointer hover:bg-transparent hover:border-yellow-500 hover:text-yellow-500">Add Move/Combo</div>
-
+             <Move :display-move="exampleMove"></Move>
+            <div @click="activateMoveInput()" class="w-fit bg-red-500 p-1 mb-2 mt-2 rounded-md border-2 border-transparent cursor-pointer hover:bg-transparent hover:border-yellow-500 hover:text-yellow-500">Add Move/Combo</div>
+            <hr class="text-red-500 mb-5">
         </div>
 
         <!-- Adding Sections -->

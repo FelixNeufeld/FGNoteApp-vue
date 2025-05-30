@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { ref, watch } from "vue";
     import { bus } from "../bus.ts";
-    import { textToNotationImages } from "../util/NotationTranslater.ts";
+    import { textToNotationImages } from "../util/NotationTranslator.ts";
 
     const notationImages = import.meta.glob('../assets/images/Notation/*.svg', {
         eager: true,
